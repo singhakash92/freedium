@@ -3,6 +3,7 @@ const app = express()
 const router = express.Router()
 const z = require("zod")
 const User = require("../db/user")
+const {generateToken, verifyToken} = require("../middleware/user")
 
 
 
@@ -15,6 +16,8 @@ const userSignup = z.object({
 
 
 router.post("/signup", async (req, res)=>{
+
+    try{
     const ParsedUserSignup = userSignup.safeParse(req.body)
 
     if(!ParsedUserSignup.success){
@@ -22,9 +25,9 @@ router.post("/signup", async (req, res)=>{
     }
 
     const {username, email, dp, password} = req.body
-    console.log(username, email, dp, password)
 
-    const exists = await  User.findOne({username : username})
+
+    const exists = await  User.findOne({email : email})
 
     if(exists){
         return res.status(411).send({"message" : "This email is already registered !!"})
@@ -36,12 +39,13 @@ router.post("/signup", async (req, res)=>{
 
     const newUserId = newUser._id
 
-    console.log("hi")
+    const token = generateToken(newUserId)
 
-    res.send({ "message": "User created successfully", "userId": newUserId });
+    res.status(200).send({ "message": "User created successfully", "token": token });
+    }catch(error){
+        res.status(411).send({"message" : "Invalid Input"})
+    }
 }
-
-
 )
 
 
