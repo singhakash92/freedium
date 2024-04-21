@@ -2,17 +2,16 @@ const mongoose = require("mongoose")
 const Blogs = require("./blogs")
 
 const user = mongoose.Schema({
-    username : {
-    type : String,
-    required : true,
-    maxLength :20,
-    minLength : 4,
-    unique : true
-    },
     email : {
         type : String,
         required : true,
-        lowercase : true
+        unique : true
+    },
+    username : {
+        type : String,
+        required : true,
+        minLength : 4,
+        maxLength :20
     }, 
     dp : {
         type : String,

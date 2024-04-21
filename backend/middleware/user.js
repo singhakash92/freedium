@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
-const SECRET_KEY = "4k45h"
+require('dotenv').config()
+const SECRET_KEY = process.env.SECRET_KEY
 
 function generateToken(userId){
 
@@ -8,5 +9,12 @@ function generateToken(userId){
     return token;  
 }
 
+function verifyToken(req, res, next){
+    const tokenWithBearer = req.headers.authorization;
+    const token = tokenWithBearer.split(" ")[1]
+    console.log(token)
 
-module.exports = {generateToken}
+}
+
+
+module.exports = {generateToken, verifyToken}

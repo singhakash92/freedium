@@ -25,17 +25,18 @@ router.post("/signup", async (req, res)=>{
     }
 
     const {username, email, dp, password} = req.body
-
-
-    const exists = await  User.findOne({email : email})
+    const exists = await User.findOne({email : email})
 
     if(exists){
         return res.status(411).send({"message" : "This email is already registered !!"})
     } 
 
     const newUser = new User({ username : username, email : email, dp : dp, password : password, blogsPublished : [], blogsSaved : []})
+    console.log("hi2")
 
     await newUser.save()
+    console.log("hi3")
+
 
     const newUserId = newUser._id
 
@@ -43,10 +44,15 @@ router.post("/signup", async (req, res)=>{
 
     res.status(200).send({ "message": "User created successfully", "token": token });
     }catch(error){
-        res.status(411).send({"message" : "Invalid Input"})
+        res.status(411).send({"message" : error.message})
     }
 }
 )
+
+router.post("/signin", verifyToken, (req, res)=>{
+
+})
+
 
 
 
