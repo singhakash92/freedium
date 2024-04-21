@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express()
 const router = express.Router()
-import { z } from "zod";
+const z = require("zod")
 const User = require("../db/user")
 
 
@@ -21,13 +21,13 @@ router.post("/signup", async (req, res)=>{
         return res.status(411).send({"message" : "Invalid Input"})     
     }
 
-    const {username, email, dp, password} = req.body()
+    const {username, email, dp, password} = req.body
     console.log(username, email, dp, password)
 
     const exists = await  User.findOne({username : username})
 
     if(exists){
-        return res.status(411).send({"message" : "This email is already registerd !!"})
+        return res.status(411).send({"message" : "This email is already registered !!"})
     } 
 
     const newUser = new User({ username : username, email : email, dp : dp, password : password, blogsPublished : [], blogsSaved : []})
@@ -37,6 +37,8 @@ router.post("/signup", async (req, res)=>{
     const newUserId = newUser._id
 
     console.log("hi")
+
+    res.send({ "message": "User created successfully", "userId": newUserId });
 }
 
 

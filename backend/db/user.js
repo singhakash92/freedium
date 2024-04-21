@@ -24,8 +24,8 @@ const user = mongoose.Schema({
         minLength : 8,
         maxLength : 20
     }, 
-    blogsPublished : [{type : mongoose.Schema.Types.objectId, ref:"Blogs"}],
-    blogsSaved : [{type : mongoose.Schema.Types.objectId, ref:"Blogs"}]
+    blogsPublished : [{type : mongoose.Schema.Types.ObjectId, ref:"Blogs"}],
+    blogsSaved : [{type : mongoose.Schema.Types.ObjectId, ref:"Blogs"}]
 })
 
 const User = mongoose.model("User", user)

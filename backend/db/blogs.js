@@ -16,7 +16,7 @@ const blogs = mongoose.Schema({
         type : String,
         required : true
     }, 
-    relevant : [{ type : String}],
+    relevant : [{ tag : String}],
     date : {
         type : Date,
         default : Date.now,
