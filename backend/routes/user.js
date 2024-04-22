@@ -14,6 +14,11 @@ const userSignup = z.object({
     password : z.string().min(8).max(20)
 })
 
+const userSignin = z.object({
+    email : z.string().email(),
+    password : z.string().min(8).max(20)
+})
+
 
 router.post("/signup", async (req, res)=>{
 
@@ -32,11 +37,8 @@ router.post("/signup", async (req, res)=>{
     } 
 
     const newUser = new User({ username : username, email : email, dp : dp, password : password, blogsPublished : [], blogsSaved : []})
-    console.log("hi2")
 
     await newUser.save()
-    console.log("hi3")
-
 
     const newUserId = newUser._id
 
@@ -49,8 +51,26 @@ router.post("/signup", async (req, res)=>{
 }
 )
 
-router.post("/signin", verifyToken, (req, res)=>{
+router.post("/signin", async (req, res)=>{
 
+    const parsedSignin = userSignin.safeParse(req.body)
+
+    if(!parsedSignin.success){
+        return res.status(411).send({"message" : "Please enter valid input !!"})
+    }
+
+    const {email, password} = req.body
+
+    const exists = await User.findOne(req.body)
+    if(!exists){
+        return res.status(411).send({"message" : "Please enter correct credentials!!"})
+    }
+
+    const userId = exists._id
+
+    const token = generateToken(userId)
+
+    return res.status(200).send({"message" : "login successfull", token:token})
 })
 
 

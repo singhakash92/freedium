@@ -11,8 +11,20 @@ function generateToken(userId){
 
 function verifyToken(req, res, next){
     const tokenWithBearer = req.headers.authorization;
+
+    if(!tokenWithBearer.startsWith("bearer ")){
+        return res.status(411).send({"message" : "Please enter the correct credentials !!"})    
+    }
+
     const token = tokenWithBearer.split(" ")[1]
-    console.log(token)
+    
+    jwt.verify(token, SECRET_KEY, (err, data) =>{
+        if(err){
+            return res.status(411).send({"message" : "please enter correct credentials !!"})
+        }
+
+        console.log(data.userId)
+    })
 
 }
 
