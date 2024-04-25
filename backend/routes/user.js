@@ -19,6 +19,13 @@ const userSignin = z.object({
     password : z.string().min(8).max(20)
 })
 
+const updateDetails = z.object({
+    username : z.string().min(4).max(20),
+    email : z.string().email(),
+    dp : z.string(),
+    password : z.string().min(8).max(20)
+})
+
 
 router.post("/signup", async (req, res)=>{
 
@@ -86,16 +93,35 @@ router.get("/me", verifyToken, async (req, res)=>{
 })
 
 
+router.post("/update", verifyToken, async (req, res) => {
+
+    const parsedUpdateDetails = updateDetails.safeParse(req.body)
+
+    if(!parsedUpdateDetails.success){
+        return res.status(411).send({"message" : "Please enter valid input !!"})
+    }
 
 
+    const {username , email, dp, password} = req.body
 
+    const userId = req.userId;
 
+    const user = await User.findOne({_id : userId})
+    // {username : username, email : email, dp : dp, password : password}
+    if(user.email == email){
+        await User.findByIdAndUpdate({_id : userId}, {username : username, dp : dp, password : password})
+        return res.status(200).send({"message" : "user data updated successfully !!"})
+    }
 
+    const search = await User.findOne({email : email})
 
+    if(!search){
+        await User.findByIdAndUpdate({_id : userId}, {username : username, email : email, dp : dp, password : password})
+        return res.status(200).send({"message" : "user data updated successfully !!"})        
+    }
 
-router.get("/",(req, res) =>{
-    res.send({"message" : "Hi there from the user section"})
-} )
+    return res.status(411).send({"message" : "This mail id is already registered !!"})
 
+})
 
 module.exports = router
