@@ -81,9 +81,8 @@ router.get("/me", verifyToken, async (req, res)=>{
    const userData = {...foundUser._doc}
    
     delete userData.password
-    console.log(userData)
 
-    res.status(200).send({"message" : "user found", user : foundUser})
+    res.status(200).send({"message" : "user found", user : userData})
 })
 
 
