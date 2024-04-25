@@ -124,4 +124,18 @@ router.post("/update", verifyToken, async (req, res) => {
 
 })
 
+
+router.get("/author", verifyToken, async (req, res) => {
+    const authorId = req.body.authorId;
+
+    const author = await User.findOne({_id : authorId})
+
+    const authorData = {...author._doc}
+
+    delete authorData.password
+    delete authorData.blogsSaved
+
+    return res.status(200).send({"author" : authorData})
+})
+
 module.exports = router
