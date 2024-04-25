@@ -63,14 +63,27 @@ router.post("/signin", async (req, res)=>{
 
     const exists = await User.findOne(req.body)
     if(!exists){
-        return res.status(411).send({"message" : "Please enter correct credentials!!"})
+        return res.status(411).send({"message" : "Please enter the correct credentials !!"})
     }
 
     const userId = exists._id
 
     const token = generateToken(userId)
 
-    return res.status(200).send({"message" : "login successfull", token:token})
+    return res.status(200).send({"message" : "loggedin successfull", token:token})
+})
+
+
+router.get("/me", verifyToken, async (req, res)=>{
+    const userId = req.userId;
+
+    const foundUser = await User.findOne({_id : userId})
+   const userData = {...foundUser._doc}
+   
+    delete userData.password
+    console.log(userData)
+
+    res.status(200).send({"message" : "user found", user : foundUser})
 })
 
 

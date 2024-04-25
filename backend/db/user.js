@@ -12,7 +12,7 @@ const user = mongoose.Schema({
         required : true,
         minLength : 4,
         maxLength : 20
-    }, 
+    },  
     dp : {
         type : String,
         required : true
